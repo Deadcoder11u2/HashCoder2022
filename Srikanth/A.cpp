@@ -18,6 +18,20 @@ struct person {
     }
 };
 
+struct project {
+    string name;
+    int d, s, b, r;
+    vector<pair<string, int>> skills;
+    project() {
+        cin >> name >> d >> s >> b >> r;
+        for(int i = 0 ; i < r ; i++) {
+            string tmp; int level;
+            cin >> tmp >> level;
+            skills.push_back({tmp, level});
+        }
+    }
+};
+
 void debug(person p) {
 
 }
