@@ -7,6 +7,7 @@ struct person {
     int skills;
     vector<pair<string, int>> sk_set;
     bool occupied;
+    int will_get_free = 0;
     person() {
         cin >> name;
         cin >> skills;
@@ -37,7 +38,8 @@ struct project {
     }
 };
 
-bool comp(project p1, project p2) {return (p1.s/p1.d) > (p2.s/p2.d) ;}
+
+bool comp(project p1, project p2) {return (double)(p1.s/p1.d) > (double)(p2.s/p2.d) ;}
 
 void debug(person p) {
 
@@ -69,16 +71,25 @@ int get_person(string s, int level, bool update) {
     }
     return -1;
 }
+
+void free_person(int cur_day) {
+    for(int i =0 ; i < contri.size() ; i++) {
+        if(contri[i].will_get_free < cur_day) {
+            contri[i].occupied = false;
+        }
+    }
+}
  
 void solve() {
     int c, p; cin >> c >> p;
-    for(int i = 0 ; i < c ; i++){
+    for(int i = 0 ; i < c ; i++) {
         contri.push_back(person());
         contri[i].occupied = false;
     }
     for(int i = 0 ; i < p ; i++) {
         projects.push_back(project());
     }
+    int days_passed = 0;
     sort(projects.begin(), projects.end(), comp);
     string out = "";
     int cnt = 0;
@@ -97,19 +108,12 @@ void solve() {
             }
         }
         if(possible) {
-            //     for(auto p: pro.skills) {
-            //     int idx = get_person(p.first, p.second, true);
-            //     possible &= idx >= 0;
-            //     if(idx != -1) {
-            //         contris.push_back({contri[idx].name, idx});
-            //         contri[idx].occupied = true;
-            //     }
-            // }
             cnt++;
             out += pro.name + "\n";
             for(auto p : contris) {
                 out += p.first + " ";
                 contri[p.second].occupied = true;
+                contri[p.second].will_get_free = days_passed + pro.d;
             }
             out += "\n";
         }
@@ -118,6 +122,8 @@ void solve() {
                 contri[p.second].occupied = false;
             }
         }
+        days_passed += pro.d;
+        free_person(days_passed);
     }
     cout << cnt << endl;
     cout << out << endl;
@@ -128,7 +134,7 @@ void solve() {
 // }
 
 int main() {
-    freopen("c_collaboration.txt", "r", stdin);
+    freopen("b_better_start_small.txt", "r", stdin);
     freopen("output.txt", "w", stdout);
     freopen("error.txt", "w", stderr);
     solve();
