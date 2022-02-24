@@ -37,10 +37,10 @@ struct project {
     }
 };
 
-bool comp(project p1, project p2) {return p1.d < p2.d ;}
+bool comp(project p1, project p2) {return (p1.s/p1.d) > (p2.s/p2.d) ;}
 
 void debug(person p) {
-    
+
 }
 
 void debug(vector<project> projects) {
@@ -52,14 +52,17 @@ void debug(vector<project> projects) {
 vector<person> contri;
 vector<project> projects;
 
-int get_person(string s, int level) {
+int get_person(string s, int level, bool update) {
     for(int i =0 ; i < contri.size() ; i++) {
         person p = contri[i];
         // cout << p.occupied << endl;
         if(!p.occupied) {
             for(auto p : p.sk_set) {
                 if(s == p.first && p.second >= level) {
-                   return i;
+                    if(update && p.second == level) {
+                        p.second++;  
+                    }
+                    return i;
                 }
             }
         }
@@ -86,7 +89,7 @@ void solve() {
         vector<pair<string, int>> contris;
         
         for(auto p: pro.skills) {
-            int idx = get_person(p.first, p.second);
+            int idx = get_person(p.first, p.second, false);
             possible &= idx >= 0;
             if(idx != -1) {
                 contris.push_back({contri[idx].name, idx});
@@ -94,6 +97,14 @@ void solve() {
             }
         }
         if(possible) {
+            //     for(auto p: pro.skills) {
+            //     int idx = get_person(p.first, p.second, true);
+            //     possible &= idx >= 0;
+            //     if(idx != -1) {
+            //         contris.push_back({contri[idx].name, idx});
+            //         contri[idx].occupied = true;
+            //     }
+            // }
             cnt++;
             out += pro.name + "\n";
             for(auto p : contris) {
@@ -112,8 +123,12 @@ void solve() {
     cout << out << endl;
 }
 
+// int score() {
+
+// }
+
 int main() {
-    freopen("input.txt", "r", stdin);
+    freopen("c_collaboration.txt", "r", stdin);
     freopen("output.txt", "w", stdout);
     freopen("error.txt", "w", stderr);
     solve();
