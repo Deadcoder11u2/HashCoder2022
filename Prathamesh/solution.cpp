@@ -58,6 +58,11 @@ void init_code()
 {
     #ifndef ONLINE_JUDGE
     freopen("input.txt", "r", stdin);
+    // freopen("inputa.txt", "r", stdin);
+    // freopen("inputb.txt", "r", stdin);
+    // freopen("inputc.txt", "r", stdin);
+    // freopen("inputd.txt", "r", stdin);
+    // freopen("inpute.txt", "r", stdin);
     freopen("output.txt", "w", stdout);
     #endif
 }
