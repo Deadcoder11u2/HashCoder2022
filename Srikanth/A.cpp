@@ -40,7 +40,7 @@ struct project {
 bool comp(project p1, project p2) {return p1.d < p2.d ;}
 
 void debug(person p) {
-
+    
 }
 
 void debug(vector<project> projects) {
