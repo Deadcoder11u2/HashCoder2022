@@ -74,10 +74,96 @@ void debug_code()
     #endif
 }
 
+class contributor{
+    public :
+    string name;
+    int count;
+    vector<pair<string, int>>skills;
+
+    contributor(){
+        cin >> name;
+        cin >> count;
+        skills.resize(count);
+
+        for (int i = 0; i < count; i++){
+            cin >> skills[i].first >> skills[i].second;
+        }
+    }
+};
+
+class project{
+    public:
+    string name;
+    int duration, score, bestbefore, count;
+    vector<pair<string, int>>roles;
+
+    project(){
+        cin >> name;
+        cin >> duration >> score >> bestbefore >> count;
+        roles.resize(count);
+
+        for (int i = 0; i < count; i++){
+            cin >> roles[i].first >> roles[i].second;
+        }
+    }
+};
+
+// comparators
+
+// by score
+bool comp_score(const project &p1, const project &p2){
+    return p1.score > p2.score;
+}
+
+// by duration
+bool comp_duration(const project &p1, const project &p2){
+    return p1.duration < p2.duration;
+}
+
+// by best before day
+bool comp_bestbefore(const project &p1, const project &p2){
+    return p1.bestbefore > p2.bestbefore;
+}
+
+// by ration 
+bool comp_ration(const project &p1, const project &p2){
+    return (p1.score/p1.duration) >  (p2.score/p2.duration);
+}
+
+// by count 
+bool comp_count(const project &p1, const project &p2){
+    return p1.count < p2.count;
+}
+
 signed main(int argc, char **argv){
     fastio();
     init_code();
     debug_code();
+
+
+    int c, p;
+    cin >> c >> p;
+
+    vector<contributor>contra(c);
+    vector<project>proj(c);
+
+    sort(all(proj), comp_ration);
+
+    // for (int i = 0; i < c; i++){
+    //     cout << i <<  " contributor" << endl;
+    //     cout <<  contra[i].name << endl;
+    //      for(int j = 0; j < contra[i].count; j++)
+    //         cout << contra[i].skills[j].first << " " << contra[i].skills[j].second << endl;
+    // }
+
+    // for (int i = 0; i < p; i++){
+    //     cout << i <<  " project" << endl;
+    //     cout <<  proj[i].name << " "  << proj[i].score << endl;
+    //      for(int j = 0; j < proj[i].count; j++)
+    //         cout << proj[i].roles[j].first << " " << proj[i].roles[j].second << endl;
+    // }
+
+    
 
    
     return 0;
