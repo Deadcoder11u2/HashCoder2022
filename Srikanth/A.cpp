@@ -109,6 +109,7 @@ void solve() {
     sort(projects.begin(), projects.end(), comp);
     string out = "";
     int cnt = 0;
+    int score = 0;
     // debug(projects);
     vector<bool> vis(p, false);
     // for(int i = 0 ; i < p ; i)
@@ -129,6 +130,7 @@ void solve() {
             }
         }
         if(possible) {
+            score += projects[i].s;
             cerr << i << endl;
             cnt++;
             out += pro.name + "\n";
@@ -168,6 +170,7 @@ void solve() {
     cout << cnt << endl;
     cout << out << endl;
     cerr << days_passed << endl;
+    cerr << "score:" << score << endl; 
 }
 
 // int score() {
@@ -176,7 +179,7 @@ void solve() {
 
 int main() {
     freopen("e_exceptional_skills.txt", "r", stdin);
-    freopen("e_out.txt", "w", stdout);
+    freopen("b_out.txt", "w", stdout);
     freopen("error.txt", "w", stderr);
     solve();
 }
