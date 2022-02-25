@@ -39,8 +39,15 @@ struct project {
 };
 
 
-bool comp(project p1, project p2) {return (double)(p1.s/p1.d) > (double)(p2.s/p2.d) ;}
-
+bool comp(project p1, project p2) {
+    // return p1.s > p2.s;
+    // return (double)(p1.b) >= (double)(p2.b) ;
+    // return (double)(1.0*p1.s/(p1.d)) > (double)(p2.s*1.0/(p2.d)) ;
+	// return p1.d < p2.d ;
+	// return p1.r<p2.r;
+    return (double)(1.0*p1.s*p1.s/p1.r*p1.d) > (double)(p2.s*p2.s*1.0/p2.r*p2.d) ;
+ }
+// bool comp(project p1, project p2) {return (double)((p1.s*p1.r)/(p1.d*p1.b)) > (double)((p2.s*p2.r)/(p2.d*p2.b)) ;}
 void debug(person p) {
 
 }
@@ -54,13 +61,16 @@ void debug(vector<project> projects) {
 vector<person> contri;
 vector<project> projects;
 
+bool flag = false;
+
 int get_person(string s, int level, bool update) {
     for(int i =0 ; i < contri.size() ; i++) {
         person p = contri[i];
-        // cout << p.occupied << endl;
         if(!p.occupied) {
             for(auto p : p.sk_set) {
-                if(s == p.first && p.second >= level) {
+                if((s == p.first && p.second >= level) ) {
+                    if(p.second >= level) flag = true;
+                    if((p.second == level-1 && flag)) return i;
                     if(update && p.second == level) {
                         p.second++;  
                     }
@@ -74,10 +84,14 @@ int get_person(string s, int level, bool update) {
 
 void free_person(int cur_day) {
     for(int i =0 ; i < contri.size() ; i++) {
-        if(contri[i].will_get_free < cur_day) {
+        if(contri[i].will_get_free <= cur_day) {
             contri[i].occupied = false;
         }
     }
+}
+
+bool comp1(person p1, person p2) {
+    return p1.skills > p2.skills;
 }
  
 void solve() {
@@ -89,31 +103,42 @@ void solve() {
     for(int i = 0 ; i < p ; i++) {
         projects.push_back(project());
     }
+    // sort(contri.begin(), contri.end(), comp1);
     int days_passed = 0;
     sort(projects.begin(), projects.end(), comp);
     string out = "";
     int cnt = 0;
-    debug(projects);
+    // debug(projects);
     for(int i = 0 ; i < p ; i++) {
         project pro = projects[i];
         bool possible = true;
         vector<pair<string, int>> contris;
+        vector<pair<string, int>> skill_update;
         
         for(auto p: pro.skills) {
             int idx = get_person(p.first, p.second, false);
             possible &= idx >= 0;
             if(idx != -1) {
                 contris.push_back({contri[idx].name, idx});
+                skill_update.push_back({p.first, p.second});
                 contri[idx].occupied = true;
             }
         }
         if(possible) {
+            cerr << i << endl;
             cnt++;
             out += pro.name + "\n";
             for(auto p : contris) {
                 out += p.first + " ";
                 contri[p.second].occupied = true;
                 contri[p.second].will_get_free = days_passed + pro.d;
+            }
+            for(int i = 0 ; i < skill_update.size() ; i++) {
+                for(auto &p : contri[contris[i].second].sk_set) {
+                    if(p.first == skill_update[i].first && p.second == skill_update[i].second){
+                        p.second++;
+                    }
+                }
             }
             out += "\n";
         }
@@ -124,6 +149,7 @@ void solve() {
         }
         days_passed += pro.d;
         free_person(days_passed);
+        flag = false;
     }
     cout << cnt << endl;
     cout << out << endl;
