@@ -154,7 +154,11 @@ void solve() {
         free_person(days_passed);
         flag = false;
     }
-    cout << "hello" << endl;
+    // cout << "hello" << endl;
+    for(output o: out) {
+        cout << o.project_id.name << endl;
+        
+    }
 }
 
 int main() {
