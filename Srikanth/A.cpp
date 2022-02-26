@@ -41,8 +41,8 @@ struct project {
 
 bool comp(project p1, project p2) {
     // return p1.s > p2.s;
-    return (double)(p1.b) >= (double)(p2.b) ;
-    // return (double)(1.0*p1.s/(p1.d)) > (double)(p2.s*1.0/(p2.d)) ;
+    // return (double)(p1.b) >= (double)(p2.b) ;
+    return (double)(1.0*p1.s/(p1.d)) > (double)(p2.s*1.0/(p2.d)) ;
 	// return p1.d < p2.d ;
 	// return p1.r<p2.r;
     // return (double)(1.0*p1.s*p1.s/p1.r*p1.d) > (double)(p2.s*p2.s*1.0/p2.r*p2.d) ;
@@ -69,11 +69,6 @@ int get_person(string s, int level, bool update) {
         if(!p.occupied) {
             for(auto p : p.sk_set) {
                 if((s == p.first && p.second >= level) ) {
-                    if(p.second >= level) flag = true;
-                    if((p.second == level-1 && flag)) return i;
-                    if(update && p.second == level) {
-                        p.second++;  
-                    }
                     return i;
                 }
             }
@@ -129,12 +124,13 @@ void solve() {
         }
         if(possible) {
             cnt++;
+            cerr << i << endl;
             output tmp_object;
             tmp_object.project_id = projects[i];
             for(auto p : contris) {
                 contri[p.second].occupied = true;
                 contri[p.second].will_get_free = days_passed + pro.d;
-                tmp_object.project_id.push_back(p.second);
+                tmp_object.contributor_id.push_back(p.second);
             }
             out.push_back(tmp_object);
             for(int i = 0 ; i < skill_update.size() ; i++) {
@@ -154,15 +150,18 @@ void solve() {
         free_person(days_passed);
         flag = false;
     }
-    // cout << "hello" << endl;
+    cout << out.size() << endl;
     for(output o: out) {
         cout << o.project_id.name << endl;
-        
+        for(int it: o.contributor_id) {
+            cout << contri[it].name << " " ;
+        }
+        cout << endl;
     }
 }
 
 int main() {
-    freopen("b_better_start_small.txt", "r", stdin);
+    freopen("c_collaboration.txt", "r", stdin);
     freopen("output.txt", "w", stdout);
     freopen("error.txt", "w", stderr);
     solve();
