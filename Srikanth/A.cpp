@@ -90,6 +90,11 @@ void free_person(int cur_day) {
     }
 }
 
+struct output {
+    project project_id;
+    vector<int> contributor_id;
+};
+
 bool comp1(person p1, person p2) {
     return p1.skills > p2.skills;
 }
@@ -103,17 +108,10 @@ void solve() {
     for(int i = 0 ; i < p ; i++) {
         projects.push_back(project());
     }
-    // sort(contri.begin(), contri.end(), comp1);
     int days_passed = 0;
-    // random_shuffle(projects.begin(), projects.end());
     sort(projects.begin(), projects.end(), comp);
-    string out = "";
     int cnt = 0;
-    int score = 0;
-    // debug(projects);
-    vector<bool> vis(p, false);
-    // for(int i = 0 ; i < p ; i)
-    int current_session = 0;
+    vector<output> out;
     for(int i = 0 ; i < p ; i++) {
         project pro = projects[i];
         bool possible = true;
@@ -130,15 +128,15 @@ void solve() {
             }
         }
         if(possible) {
-            score += projects[i].s;
-            cerr << i << endl;
             cnt++;
-            out += pro.name + "\n";
+            output tmp_object;
+            tmp_object.project_id = projects[i];
             for(auto p : contris) {
-                out += p.first + " ";
                 contri[p.second].occupied = true;
                 contri[p.second].will_get_free = days_passed + pro.d;
+                tmp_object.project_id.push_back(p.second);
             }
+            out.push_back(tmp_object);
             for(int i = 0 ; i < skill_update.size() ; i++) {
                 for(auto &p : contri[contris[i].second].sk_set) {
                     if(p.first == skill_update[i].first && p.second == skill_update[i].second){
@@ -146,40 +144,22 @@ void solve() {
                     }
                 }
             }
-            out += "\n";
-            current_session = max(current_session, pro.d);
         }
         else {
-            // cerr << i << endl;
-            if(!vis[i]){
-                // cerr << i << endl;
-                // i--;
-                vis[i] = true;
-                days_passed += current_session;
-                // free_person(days_passed);
-            // cerr << "heloo\n";
-                for(auto p : contris) {
-                    contri[p.second].occupied = false;
-                }
+            for(auto p : contris) {
+                contri[p.second].occupied = false;
             }
         }
+        days_passed += pro.d;
         free_person(days_passed);
         flag = false;
     }
-    // cout << "hello" << endl;
-    cout << cnt << endl;
-    cout << out << endl;
-    cerr << days_passed << endl;
-    cerr << "score:" << score << endl; 
+    cout << "hello" << endl;
 }
 
-// int score() {
-
-// }
-
 int main() {
-    freopen("e_exceptional_skills.txt", "r", stdin);
-    freopen("b_out.txt", "w", stdout);
+    freopen("b_better_start_small.txt", "r", stdin);
+    freopen("output.txt", "w", stdout);
     freopen("error.txt", "w", stderr);
     solve();
 }
